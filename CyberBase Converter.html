@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberBase Converter - Number System Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --card-bg: #ffffff;
+            --body-bg: #f5f7fa;
+            --border-color: #ddd;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --cyber-blue: #2980b9;
+            --cyber-green: #27ae60;
+            --cyber-purple: #8e44ad;
+        }
+
+        [dir="rtl"] {
+            --primary-color: #2980b9;
+            --secondary-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--dark-color);
+            line-height: 1.6;
+            transition: var(--transition);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(52, 152, 219, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(46, 204, 113, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 2.8rem;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-green), var(--cyber-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-green), var(--cyber-purple));
+            bottom: -10px;
+            left: 15%;
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-purple));
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        [dir="rtl"] .language-toggle {
+            right: auto;
+            left: 0;
+        }
+
+        .language-toggle:hover {
+            background: linear-gradient(135deg, var(--cyber-purple), var(--cyber-blue));
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .description {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 25px auto 0;
+            line-height: 1.8;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--cyber-blue);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .converter-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .number-system {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .number-system:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-green));
+        }
+
+        .number-system:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .system-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .system-label i {
+            color: var(--cyber-blue);
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .system-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            transition: var(--transition);
+            background-color: #f9f9f9;
+        }
+
+        .system-input:focus {
+            outline: none;
+            border-color: var(--cyber-blue);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+        }
+
+        .system-input.valid {
+            border-color: var(--success-color);
+        }
+
+        .system-input.invalid {
+            border-color: var(--error-color);
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.3rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        [dir="rtl"] .validation-icon {
+            right: auto;
+            left: 15px;
+        }
+
+        .validation-icon.valid {
+            color: var(--success-color);
+            opacity: 1;
+        }
+
+        .validation-icon.invalid {
+            color: var(--error-color);
+            opacity: 1;
+        }
+
+        .system-base {
+            margin-top: 10px;
+            color: #777;
+            font-size: 0.95rem;
+            font-style: italic;
+            padding-left: 5px;
+        }
+
+        .instructions {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--cyber-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .instructions:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+            border-radius: 0 0 0 100%;
+        }
+
+        .instructions h3 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+        }
+
+        .instructions ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 5px;
+        }
+
+        .instructions li:before {
+            content: '•';
+            color: var(--cyber-blue);
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+
+        [dir="rtl"] .instructions li:before {
+            left: auto;
+            right: -15px;
+        }
+
+        .instructions p {
+            color: #666;
+            background-color: rgba(52, 152, 219, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--cyber-blue);
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #777;
+            font-size: 0.95rem;
+            padding: 25px;
+            width: 100%;
+            border-top: 1px solid var(--border-color);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+        }
+
+        .footer-credits {
+            margin-top: 15px;
+            font-style: italic;
+            color: var(--cyber-blue);
+            font-weight: 500;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            min-height: 22px;
+            padding-left: 5px;
+        }
+
+        .cyber-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        [dir="rtl"] .cyber-badge {
+            margin-left: 0;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .converter-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .language-toggle {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                width: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            [dir="rtl"] .language-toggle {
+                left: 0;
+                margin-right: auto;
+                margin-left: auto;
+            }
+            
+            .description {
+                font-size: 1rem;
+                padding: 15px;
+            }
+            
+            .system-input {
+                font-size: 1.1rem;
+                padding: 14px;
+            }
+            
+            .system-label {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .number-system, .instructions {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.9rem;
+            }
+            
+            .instructions h3 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="title">CyberBase Converter</h1>
+            <div class="subtitle" id="subtitle">Advanced Number System Calculator for Cybersecurity</div>
+            <button class="language-toggle" id="languageToggle">
+                <i class="fas fa-language"></i>
+                <span id="languageText">العربية</span>
+            </button>
+            <p class="description" id="description">
+                A specialized number system converter designed for cybersecurity and computer engineering students. 
+                Instantly convert between Binary, Octal, Decimal, and Hexadecimal systems with full decimal point support.
+                Perfect for learning number systems in computer science and cybersecurity courses.
+            </p>
+        </header>
+
+        <div class="converter-container">
+            <!-- Binary System -->
+            <div class="number-system">
+                <div class="system-label">
+                    <i class="fas fa-digital-tachograph"></i>
+                    <span id="binaryLabel">Binary (Base 2) <span class="cyber-badge">01</span></span>
+                </div>
+                <div class="input-container">
+                    <input type="text" class="system-input" id="binaryInput" placeholder="e.g., 1010.101">
+                    <div class="validation-icon" id="binaryValidation"></div>
+                </div>
+                <div class="error-message" id="binaryError"></div>
+                <div class="system-base" id="binaryBase">Digits: 0-1 | Used in: Digital systems, cryptography</div>
+            </div>
+
+            <!-- Octal System -->
+            <div class="number-system">
+                <div class="system-label">
+                    <i class="fas fa-hashtag"></i>
+                    <span id="octalLabel">Octal (Base 8) <span class="cyber-badge">0-7</span></span>
+                </div>
+                <div class="input-container">
+                    <input type="text" class="system-input" id="octalInput" placeholder="e.g., 12.4">
+                    <div class="validation-icon" id="octalValidation"></div>
+                </div>
+                <div class="error-message" id="octalError"></div>
+                <div class="system-base" id="octalBase">Digits: 0-7 | Used in: File permissions, Unix systems</div>
+            </div>
+
+            <!-- Decimal System -->
+            <div class="number-system">
+                <div class="system-label">
+                    <i class="fas fa-calculator"></i>
+                    <span id="decimalLabel">Decimal (Base 10) <span class="cyber-badge">0-9</span></span>
+                </div>
+                <div class="input-container">
+                    <input type="text" class="system-input" id="decimalInput" placeholder="e.g., 10.625">
+                    <div class="validation-icon" id="decimalValidation"></div>
+                </div>
+                <div class="error-message" id="decimalError"></div>
+                <div class="system-base" id="decimalBase">Digits: 0-9 | Used in: Everyday calculations, finance</div>
+            </div>
+
+            <!-- Hexadecimal System -->
+            <div class="number-system">
+                <div class="system-label">
+                    <i class="fas fa-infinity"></i>
+                    <span id="hexLabel">Hexadecimal (Base 16) <span class="cyber-badge">0-F</span></span>
+                </div>
+                <div class="input-container">
+                    <input type="text" class="system-input" id="hexInput" placeholder="e.g., A.A">
+                    <div class="validation-icon" id="hexValidation"></div>
+                </div>
+                <div class="error-message" id="hexError"></div>
+                <div class="system-base" id="hexBase">Digits: 0-9, A-F | Used in: Memory addresses, colors, cryptography</div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> <span id="instructionsTitle">How to Use CyberBase Converter</span></h3>
+            <ul id="instructionsList">
+                <li>Enter a number in any system to instantly see conversions in all other systems</li>
+                <li>Use decimal point (.) for fractional numbers - fully supported in all systems</li>
+                <li>Hexadecimal letters can be uppercase or lowercase (A-F or a-f)</li>
+                <li>Invalid inputs are highlighted in red with specific error messages</li>
+                <li>Valid inputs are highlighted in green with a checkmark</li>
+                <li>Each system shows its practical applications in cybersecurity and computing</li>
+            </ul>
+            <p id="instructionsNote">
+                <strong>Educational Tip:</strong> Try converting decimal 255 to all systems - notice how it becomes FF in hexadecimal, 
+                a common value in computing (maximum value in 8-bit systems).
+            </p>
+        </div>
+
+        <footer>
+            <p id="footerText">CyberBase Converter © 2026 | Specialized Tool for Number System Education</p>
+            <div class="footer-credits" id="footerCredits">
+                Developed by: Cyber Khalil | Instructor of Computerized Information Security Engineering<br>
+                For: Introduction to Computing Course - Cybersecurity Engineering Specialization
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Language data
+        const translations = {
+            en: {
+                title: "CyberBase Converter",
+                subtitle: "Advanced Number System Calculator for Cybersecurity",
+                description: "A specialized number system converter designed for cybersecurity and computer engineering students. Instantly convert between Binary, Octal, Decimal, and Hexadecimal systems with full decimal point support. Perfect for learning number systems in computer science and cybersecurity courses.",
+                binaryLabel: "Binary (Base 2)",
+                octalLabel: "Octal (Base 8)",
+                decimalLabel: "Decimal (Base 10)",
+                hexLabel: "Hexadecimal (Base 16)",
+                binaryBase: "Digits: 0-1 | Used in: Digital systems, cryptography",
+                octalBase: "Digits: 0-7 | Used in: File permissions, Unix systems",
+                decimalBase: "Digits: 0-9 | Used in: Everyday calculations, finance",
+                hexBase: "Digits: 0-9, A-F | Used in: Memory addresses, colors, cryptography",
+                binaryPlaceholder: "e.g., 1010.101",
+                octalPlaceholder: "e.g., 12.4",
+                decimalPlaceholder: "e.g., 10.625",
+                hexPlaceholder: "e.g., A.A",
+                instructionsTitle: "How to Use CyberBase Converter",
+                instructionsList: [
+                    "Enter a number in any system to instantly see conversions in all other systems",
+                    "Use decimal point (.) for fractional numbers - fully supported in all systems",
+                    "Hexadecimal letters can be uppercase or lowercase (A-F or a-f)",
+                    "Invalid inputs are highlighted in red with specific error messages",
+                    "Valid inputs are highlighted in green with a checkmark",
+                    "Each system shows its practical applications in cybersecurity and computing"
+                ],
+                instructionsNote: "Educational Tip: Try converting decimal 255 to all systems - notice how it becomes FF in hexadecimal, a common value in computing (maximum value in 8-bit systems).",
+                footerText: "CyberBase Converter © 2026 | Specialized Tool for Number System Education",
+                footerCredits: "Developed by: Mahmoud Khalil | Instructor of Computerized Information Security Engineering<br>For: Introduction to Computing Course - Cybersecurity Engineering Specialization",
+                languageText: "العربية"
+            },
+            ar: {
+                title: "محول سايبر للأساسات",
+                subtitle: "آلة حاسبة متقدمة لأنظمة العد للأمن السيبراني",
+                description: "محول متخصص لأنظمة العد مصمم لطلبة الأمن السيبراني وهندسة الحاسوب. يحول فورياً بين الأنظمة الثنائية والثمانية والعشرية والست عشرية مع دعم كامل للفواصل العشرية. مثالي لتعلم أنظمة العد في مساقات علوم الحاسوب والأمن السيبراني.",
+                binaryLabel: "الثنائي (الأساس 2)",
+                octalLabel: "الثماني (الأساس 8)",
+                decimalLabel: "العشري (الأساس 10)",
+                hexLabel: "الست عشري (الأساس 16)",
+                binaryBase: "الأرقام: 0-1 | يستخدم في: الأنظمة الرقمية، التشفير",
+                octalBase: "الأرقام: 0-7 | يستخدم في: صلاحيات الملفات، أنظمة يونكس",
+                decimalBase: "الأرقام: 0-9 | يستخدم في: الحسابات اليومية، التمويل",
+                hexBase: "الأرقام: 0-9، A-F | يستخدم في: عناوين الذاكرة، الألوان، التشفير",
+                binaryPlaceholder: "مثال: 1010.101",
+                octalPlaceholder: "مثال: 12.4",
+                decimalPlaceholder: "مثال: 10.625",
+                hexPlaceholder: "مثال: A.A",
+                instructionsTitle: "كيفية استخدام محول سايبر للأساسات",
+                instructionsList: [
+                    "أدخل رقم في أي نظام لرؤية التحويلات فورياً في جميع الأنظمة الأخرى",
+                    "استخدم النقطة العشرية (.) للأرقام الكسرية - مدعومة بالكامل في جميع الأنظمة",
+                    "يمكن أن تكون أحرف النظام الست عشري كبيرة أو صغيرة (A-F أو a-f)",
+                    "المدخلات غير الصالحة تظهر باللون الأحمر مع رسائل خطأ محددة",
+                    "المدخلات الصالحة تظهر باللون الأخضر مع علامة صح",
+                    "كل نظام يظهر تطبيقاته العملية في الأمن السيبراني والحوسبة"
+                ],
+                instructionsNote: "نصيحة تعليمية: جرب تحويل الرقم العشري 255 إلى جميع الأنظمة - لاحظ كيف يصبح FF في النظام الست عشري، وهي قيمة شائعة في الحوسبة (القيمة القصوى في الأنظمة 8-بت).",
+                footerText: "محول سايبر للأساسات © 2026 | أداة متخصصة لتعليم أنظمة العد",
+                footerCredits: "مطور من قبل: سايبر خليل | مدرس هندسة أمن معلومات محوسبة<br>من أجل: مساق مقدمة في الحوسبة - تخصص هندسة الأمن السيبراني",
+                languageText: "English"
+            }
+        };
+
+        // DOM Elements
+        const languageToggle = document.getElementById('languageToggle');
+        const languageText = document.getElementById('languageText');
+        const htmlElement = document.documentElement;
+        const subtitle = document.getElementById('subtitle');
+        
+        // Get all elements that need translation
+        const title = document.getElementById('title');
+        const description = document.getElementById('description');
+        const binaryLabel = document.getElementById('binaryLabel');
+        const octalLabel = document.getElementById('octalLabel');
+        const decimalLabel = document.getElementById('decimalLabel');
+        const hexLabel = document.getElementById('hexLabel');
+        const binaryBase = document.getElementById('binaryBase');
+        const octalBase = document.getElementById('octalBase');
+        const decimalBase = document.getElementById('decimalBase');
+        const hexBase = document.getElementById('hexBase');
+        const binaryInput = document.getElementById('binaryInput');
+        const octalInput = document.getElementById('octalInput');
+        const decimalInput = document.getElementById('decimalInput');
+        const hexInput = document.getElementById('hexInput');
+        const instructionsTitle = document.getElementById('instructionsTitle');
+        const instructionsList = document.getElementById('instructionsList');
+        const instructionsNote = document.getElementById('instructionsNote');
+        const footerText = document.getElementById('footerText');
+        const footerCredits = document.getElementById('footerCredits');
+
+        // Input fields and validation icons
+        const inputs = {
+            binary: document.getElementById('binaryInput'),
+            octal: document.getElementById('octalInput'),
+            decimal: document.getElementById('decimalInput'),
+            hex: document.getElementById('hexInput')
+        };
+
+        const validationIcons = {
+            binary: document.getElementById('binaryValidation'),
+            octal: document.getElementById('octalValidation'),
+            decimal: document.getElementById('decimalValidation'),
+            hex: document.getElementById('hexValidation')
+        };
+
+        const errorMessages = {
+            binary: document.getElementById('binaryError'),
+            octal: document.getElementById('octalError'),
+            decimal: document.getElementById('decimalError'),
+            hex: document.getElementById('hexError')
+        };
+
+        // Current language
+        let currentLang = 'en';
+
+        // Initialize the page
+        function init() {
+            // Set initial language
+            updateLanguage();
+            
+            // Add event listeners to inputs
+            Object.keys(inputs).forEach(key => {
+                inputs[key].addEventListener('input', function() {
+                    handleInputChange(key, this.value);
+                });
+            });
+
+            // Add event listener for language toggle
+            languageToggle.addEventListener('click', toggleLanguage);
+            
+            // Set default decimal value
+            inputs.decimal.value = "255";
+            handleInputChange('decimal', "255");
+            
+            // Add focus effect to inputs
+            Object.values(inputs).forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+        }
+
+        // Toggle between English and Arabic
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            updateLanguage();
+            
+            // Add animation effect
+            languageToggle.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                languageToggle.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        // Update page content based on current language
+        function updateLanguage() {
+            const lang = translations[currentLang];
+            
+            // Update text content
+            title.textContent = lang.title;
+            subtitle.textContent = lang.subtitle;
+            description.textContent = lang.description;
+            binaryLabel.innerHTML = lang.binaryLabel + ' <span class="cyber-badge">01</span>';
+            octalLabel.innerHTML = lang.octalLabel + ' <span class="cyber-badge">0-7</span>';
+            decimalLabel.innerHTML = lang.decimalLabel + ' <span class="cyber-badge">0-9</span>';
+            hexLabel.innerHTML = lang.hexLabel + ' <span class="cyber-badge">0-F</span>';
+            binaryBase.textContent = lang.binaryBase;
+            octalBase.textContent = lang.octalBase;
+            decimalBase.textContent = lang.decimalBase;
+            hexBase.textContent = lang.hexBase;
+            binaryInput.placeholder = lang.binaryPlaceholder;
+            octalInput.placeholder = lang.octalPlaceholder;
+            decimalInput.placeholder = lang.decimalPlaceholder;
+            hexInput.placeholder = lang.hexPlaceholder;
+            instructionsTitle.textContent = lang.instructionsTitle;
+            instructionsNote.textContent = lang.instructionsNote;
+            footerText.textContent = lang.footerText;
+            footerCredits.innerHTML = lang.footerCredits;
+            languageText.textContent = lang.languageText;
+            
+            // Update list items
+            const listItems = instructionsList.querySelectorAll('li');
+            lang.instructionsList.forEach((item, index) => {
+                if (listItems[index]) {
+                    listItems[index].textContent = item;
+                }
+            });
+            
+            // Update HTML direction
+            htmlElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+            htmlElement.setAttribute('lang', currentLang);
+        }
+
+        // Validate input based on number system
+        function validateInput(system, value) {
+            if (value === '') return { valid: false, message: '' };
+            
+            // Check for multiple decimal points
+            if ((value.match(/\./g) || []).length > 1) {
+                return { 
+                    valid: false, 
+                    message: currentLang === 'en' 
+                        ? "Multiple decimal points are not allowed" 
+                        : "لا يُسمح بأكثر من نقطة عشرية واحدة" 
+                };
+            }
+            
+            // Check for leading zeros (except for decimal numbers)
+            if (system !== 'decimal' && /^0[0-9]/.test(value.split('.')[0]) && value.length > 1) {
+                return { 
+                    valid: false, 
+                    message: currentLang === 'en' 
+                        ? "Leading zeros are not allowed in this number system" 
+                        : "الأصفار البادئة غير مسموح بها في نظام العد هذا" 
+                };
+            }
+            
+            const patterns = {
+                binary: /^[01]+(\.[01]+)?$/,
+                octal: /^[0-7]+(\.[0-7]+)?$/,
+                decimal: /^[0-9]+(\.[0-9]+)?$/,
+                hex: /^[0-9A-Fa-f]+(\.[0-9A-Fa-f]+)?$/
+            };
+            
+            const errorMessages = {
+                en: {
+                    binary: "Binary numbers can only contain 0 and 1",
+                    octal: "Octal numbers can only contain digits 0-7",
+                    decimal: "Decimal numbers can only contain digits 0-9",
+                    hex: "Hexadecimal numbers can only contain digits 0-9 and letters A-F"
+                },
+                ar: {
+                    binary: "الأرقام الثنائية يمكن أن تحتوي فقط على 0 و 1",
+                    octal: "الأرقام الثمانية يمكن أن تحتوي فقط على الأرقام 0-7",
+                    decimal: "الأرقام العشرية يمكن أن تحتوي فقط على الأرقام 0-9",
+                    hex: "الأرقام الست عشرية يمكن أن تحتوي فقط على الأرقام 0-9 والحروف A-F"
+                }
+            };
+            
+            if (patterns[system].test(value)) {
+                return { valid: true, message: '' };
+            } else {
+                return { 
+                    valid: false, 
+                    message: errorMessages[currentLang][system] 
+                };
+            }
+        }
+
+        // Convert between number systems
+        function convertNumber(system, value) {
+            if (value === '' || value === '.') return {};
+            
+            const validation = validateInput(system, value);
+            if (!validation.valid) return {};
+            
+            // Split into integer and fractional parts
+            let [integerPart, fractionalPart = ''] = value.split('.');
+            
+            // Convert to decimal first
+            let decimalValue = 0;
+            
+            // Convert integer part to decimal
+            if (integerPart && integerPart !== '') {
+                decimalValue = parseInt(integerPart, getBase(system));
+            }
+            
+            // Convert fractional part to decimal
+            if (fractionalPart && fractionalPart !== '') {
+                let fractionalDecimal = 0;
+                const base = getBase(system);
+                
+                for (let i = 0; i < fractionalPart.length; i++) {
+                    const digit = parseInt(fractionalPart[i], base);
+                    fractionalDecimal += digit / Math.pow(base, i + 1);
+                }
+                
+                decimalValue += fractionalDecimal;
+            }
+            
+            // Handle negative numbers (just in case)
+            if (isNaN(decimalValue)) return {};
+            
+            // Convert decimal to all other systems
+            return {
+                binary: decimalToSystem(decimalValue, 2),
+                octal: decimalToSystem(decimalValue, 8),
+                decimal: decimalToSystem(decimalValue, 10),
+                hex: decimalToSystem(decimalValue, 16)
+            };
+        }
+
+        // Get base for each system
+        function getBase(system) {
+            const bases = {
+                binary: 2,
+                octal: 8,
+                decimal: 10,
+                hex: 16
+            };
+            return bases[system];
+        }
+
+        // Convert decimal to another base
+        function decimalToSystem(decimalValue, base) {
+            if (decimalValue === 0) return "0";
+            
+            // Handle negative numbers
+            const isNegative = decimalValue < 0;
+            decimalValue = Math.abs(decimalValue);
+            
+            // Handle integer part
+            let integerPart = Math.floor(decimalValue);
+            let integerResult = '';
+            
+            if (integerPart === 0) {
+                integerResult = '0';
+            } else {
+                while (integerPart > 0) {
+                    const remainder = integerPart % base;
+                    integerResult = (remainder < 10 ? remainder.toString() : 
+                                   String.fromCharCode(55 + remainder)) + integerResult;
+                    integerPart = Math.floor(integerPart / base);
+                }
+            }
+            
+            // Handle fractional part (up to 10 decimal places)
+            let fractionalPart = decimalValue - Math.floor(decimalValue);
+            let fractionalResult = '';
+            
+            if (fractionalPart > 0) {
+                fractionalResult = '.';
+                for (let i = 0; i < 10 && fractionalPart > 0; i++) {
+                    fractionalPart *= base;
+                    const digit = Math.floor(fractionalPart);
+                    fractionalResult += (digit < 10 ? digit.toString() : 
+                                       String.fromCharCode(55 + digit));
+                    fractionalPart -= digit;
+                }
+                
+                // Remove trailing zeros
+                fractionalResult = fractionalResult.replace(/0+$/, '');
+                if (fractionalResult === '.') fractionalResult = '';
+            }
+            
+            return (isNegative ? '-' : '') + integerResult + fractionalResult;
+        }
+
+        // Handle input change
+        function handleInputChange(system, value) {
+            // Validate the input
+            const validation = validateInput(system, value);
+            
+            // Update validation UI
+            updateValidationUI(system, validation.valid, validation.message);
+            
+            // If valid, convert and update other fields
+            if (validation.valid) {
+                const conversions = convertNumber(system, value);
+                
+                // Update other input fields (avoid updating the current one to prevent loops)
+                Object.keys(inputs).forEach(key => {
+                    if (key !== system && conversions[key] !== undefined) {
+                        inputs[key].value = conversions[key];
+                        updateValidationUI(key, true, '');
+                    }
+                });
+            } else if (value === '') {
+                // If empty, clear all fields
+                Object.keys(inputs).forEach(key => {
+                    if (key !== system) {
+                        inputs[key].value = '';
+                        updateValidationUI(key, false, '');
+                    }
+                });
+            } else {
+                // If invalid, mark other fields as invalid
+                Object.keys(inputs).forEach(key => {
+                    if (key !== system) {
+                        const message = currentLang === 'en' 
+                            ? 'Cannot convert: source value is invalid' 
+                            : 'لا يمكن التحويل: القيمة الأصلية غير صالحة';
+                        updateValidationUI(key, false, message);
+                    }
+                });
+            }
+        }
+
+        // Update validation UI
+        function updateValidationUI(system, isValid, errorMessage) {
+            const input = inputs[system];
+            const validationIcon = validationIcons[system];
+            const errorElement = errorMessages[system];
+            
+            // Update input styling
+            input.classList.remove('valid', 'invalid');
+            input.classList.add(isValid ? 'valid' : 'invalid');
+            
+            // Update validation icon
+            validationIcon.classList.remove('valid', 'invalid');
+            validationIcon.classList.add(isValid ? 'valid' : 'invalid');
+            validationIcon.innerHTML = isValid ? 
+                '<i class="fas fa-check-circle"></i>' : 
+                '<i class="fas fa-exclamation-circle"></i>';
+            
+            // Update error message
+            errorElement.textContent = errorMessage;
+            
+            // Add animation for validation change
+            if (isValid) {
+                input.style.animation = 'none';
+                setTimeout(() => {
+                    input.style.animation = 'pulseGreen 0.5s';
+                }, 10);
+            }
+        }
+
+        // Add CSS animation for validation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulseGreen {
+                0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize the converter
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
